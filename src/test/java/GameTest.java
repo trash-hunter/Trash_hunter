@@ -2,14 +2,13 @@ import org.junit.Test;
 import org.trash_hunter.trashes.Bottle;
 import org.trash_hunter.Game;
 
-import java.io.IOException;
 
 import static org.junit.Assert.*;
 
 public class GameTest {
 
     @Test
-    public void shouldAvoidCollisionBetwwenTrashes () throws IOException{
+    public void shouldAvoidCollisionBetwwenTrashes () {
         Bottle bottle1 =new Bottle(100,100);
         Bottle bottle2 =new Bottle(100,100);
         assertTrue(Game.checkCollisionBetweenTrashes(bottle1,bottle2));
@@ -23,4 +22,6 @@ public class GameTest {
         Bottle bottle8 =new Bottle(131,100);
         assertFalse(Game.checkCollisionBetweenTrashes(bottle7,bottle8));
     }
+
+
 }

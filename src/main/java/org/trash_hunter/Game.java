@@ -1,7 +1,6 @@
 package org.trash_hunter;
 
-import org.trash_hunter.trashes.Bottle;
-import org.trash_hunter.trashes.Trash;
+import org.trash_hunter.trashes.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,8 +15,8 @@ public class Game {
     private BufferedImage backgroundImage;
     private int score;
     final private Diver myDiver;
-    private Trash[] trashset;
-    private Random random;
+    private final Trash[] trashset;
+    private final Random randomNbr;
 
     public Game(){
         try{
@@ -27,8 +26,8 @@ public class Game {
         }
         this.score=0;
         this.myDiver=new Diver();
-        this.trashset=new Trash[10];
-        this.random=new Random();
+        this.trashset=new Trash[30];
+        this.randomNbr=new Random();
         initTrashes();
     }
     public void rending(Graphics2D contexte){
@@ -84,21 +83,44 @@ public class Game {
     }
 
     /**
-     * Initialise l'ensemble des déchets.
-     * A améliorer : Doit initialiser l'enesemble avec tous les objets disponibles dans des
-     * proportions prédéfinis
+     * Initialise l'ensemble des déchets avec une certaine proportion et une sélection aléatoire de
+     * l'objet en fonction de sa taille
+     * Nb total de déchets : 30 (15 petits,10 moyens, 5 gros)
      */
-    private void initTrashes() {
+    public void initTrashes() {
         for (int i = 0; i < this.trashset.length; i++) {
-            this.trashset[i] = new Bottle(this.random.nextInt(1440), this.random.nextInt(780));
+            int randomNumber = randomNbr.nextInt(1,3);
+            int x = randomNbr.nextInt(1440);
+            int y;
+
+            if (i <= 15) {
+                if (randomNumber == 1) {
+                    trashset[i] = new Bottle(x, randomNbr.nextInt(780));
+                } else if (randomNumber == 2) {
+                    trashset[i] = new Can(x, randomNbr.nextInt(780));
+                }
+            } else if (i <= 25) {
+                if (randomNumber == 1) {
+                    trashset[i] = new PlasticBag(x, randomNbr.nextInt(300));
+                } else if (randomNumber == 2) {
+                    trashset[i] = new Tire(x, randomNbr.nextInt(300));
+                }
+            } else {
+                y = randomNbr.nextInt(500, 780);
+                if (randomNumber == 1) {
+                    trashset[i] = new OilContainer(x, y);
+                } else if (randomNumber == 2) {
+                    trashset[i] = new Boat(x, y);
+                }
+            }
         }
     }
 
     /**
      * Renvoie true si il y a collision entre deux déchets
-     * @param trash1
-     * @param trash2
-     * @return
+     * @param trash1 premier déchet
+     * @param trash2 second déchet
+     * @return true if collision
      */
     public static boolean checkCollisionBetweenTrashes (Trash trash1,Trash trash2) {
         return(trash2.getX() <= trash1.getX() + trash1.getWidth() +10 &&
@@ -114,5 +136,9 @@ public class Game {
                 break;
             }
         }
+    }
+
+    public Trash[] getTrashset(){
+        return this.trashset;
     }
 }
